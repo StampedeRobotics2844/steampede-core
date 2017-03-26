@@ -18,6 +18,9 @@ class SteampedeRobot(wpilib.IterativeRobot):
         self.drive_lr_motor = wpilib.Victor(7)
         self.drive_rf_motor = wpilib.Victor(8)
         self.drive_rr_motor = wpilib.Victor(9)
+        self.shooter_motor = wpilib.Victor(0)
+        self.gear_arm_motor = wpilib.Victor(1)
+        self.loader_motor= wpilib.Victor(2)
 
         self.myRobot = wpilib.RobotDrive(self.drive_lf_motor, self.drive_lr_motor, self.drive_rf_motor, self.drive_rr_motor)
         self.myRobot.setExpiration(0.1)
