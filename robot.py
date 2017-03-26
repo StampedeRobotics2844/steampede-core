@@ -14,7 +14,12 @@ class SteampedeRobot(wpilib.IterativeRobot):
         '''Robot initilization function'''
 
         # object that handles basic drive operatives
-        self.myRobot = wpilib.RobotDrive(6, 7, 8, 9)
+        self.drive_lf_motor = wpilib.Victor(6)
+        self.drive_lr_motor = wpilib.Victor(7)
+        self.drive_rf_motor = wpilib.Victor(8)
+        self.drive_rr_motor = wpilib.Victor(9)
+
+        self.myRobot = wpilib.RobotDrive(self.drive_lf_motor, self.drive_lr_motor, self.drive_rf_motor, self.drive_rr_motor)
         self.myRobot.setExpiration(0.1)
 
         # joysticks 1 & 2 on the driver station
