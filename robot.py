@@ -14,10 +14,10 @@ class SteampedeRobot(wpilib.IterativeRobot):
         '''Robot initilization function'''
 
         # object that handles basic drive operatives
-        self.drive_lf_motor = wpilib.Victor(6)
-        self.drive_lr_motor = wpilib.Victor(7)
-        self.drive_rf_motor = wpilib.Victor(8)
-        self.drive_rr_motor = wpilib.Victor(9)
+        self.drive_rf_motor = wpilib.Victor(6)
+        self.drive_rr_motor = wpilib.Victor(7)
+        self.drive_lf_motor = wpilib.Victor(8)
+        self.drive_lr_motor = wpilib.Victor(9)
         self.shooter_motor = wpilib.Victor(0)
         self.gear_arm_motor = wpilib.Spark(1)
         self.loader_motor= wpilib.Spark(2)
