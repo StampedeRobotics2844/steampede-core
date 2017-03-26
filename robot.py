@@ -1,4 +1,9 @@
-'''steampede 2017'''
+'''
+Steampede 2017
+Betty H. Fairfax
+Team 2844 @2017
+
+'''
 import wpilib
 
 
