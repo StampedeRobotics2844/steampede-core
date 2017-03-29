@@ -13,7 +13,9 @@ class SteampedeRobot(wpilib.IterativeRobot):
     def robotInit(self):
         '''Robot initilization function'''
 
-        # object that handles basic drive operatives
+        wpilib.CameraServer.launch()
+
+        '''object that handles basic drive operatives'''
         self.drive_rf_motor = wpilib.Victor(6)
         self.drive_rr_motor = wpilib.Victor(7)
         self.drive_lf_motor = wpilib.Victor(8)
@@ -25,7 +27,7 @@ class SteampedeRobot(wpilib.IterativeRobot):
         self.myRobot = wpilib.RobotDrive(self.drive_lf_motor, self.drive_lr_motor, self.drive_rf_motor, self.drive_rr_motor)
         self.myRobot.setExpiration(0.1)
 
-        # joysticks 1 & 2 on the driver station
+        '''joysticks 1 & 2 on the driver station'''
         self.leftStick = wpilib.Joystick(0)
         self.rightStick = wpilib.Joystick(1)
 
