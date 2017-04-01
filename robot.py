@@ -5,6 +5,7 @@ Team 2844 @2017
 
 '''
 import wpilib
+from networktables import NetworkTables
 
 
 class SteampedeRobot(wpilib.IterativeRobot):
@@ -12,7 +13,13 @@ class SteampedeRobot(wpilib.IterativeRobot):
 
     def robotInit(self):
         '''Robot initilization function'''
+        '''initialize networktables'''
+        self.sd = NetworkTables.getTable("SmartDashboard")
 
+        self.shooter_speed = 1.0
+        self.sd.putNumber('shooter_speed', self.shooter_speed)
+
+        '''initialize the camera'''
         wpilib.CameraServer.launch()
 
         '''object that handles basic drive operatives'''
@@ -31,6 +38,8 @@ class SteampedeRobot(wpilib.IterativeRobot):
         self.leftStick = wpilib.Joystick(0)
         self.rightStick = wpilib.Joystick(1)
 
+        self.shooter_enabled = False
+
     def teleopInit(self):
         '''Executed at the start of teleop mode'''
         self.myRobot.setSafetyEnabled(True)
@@ -38,6 +47,13 @@ class SteampedeRobot(wpilib.IterativeRobot):
     def teleopPeriodic(self):
         '''Runs the motor with tank steering'''
         self.myRobot.tankDrive(self.leftStick, self.rightStick, True)
+
+        if self.leftStick.getTrigger():
+            self.shooter_enabled = True
+            self.shooter_motor.set(self.leftStick.getAxis(wpilib.Joystick.AxisType.kZ))
+        else:
+            self.shooter_enabled = False
+            self.shooter_motor.set(0)
 
 if __name__ == '__main__':
     wpilib.run(SteampedeRobot)
