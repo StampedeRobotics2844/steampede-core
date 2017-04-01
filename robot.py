@@ -5,39 +5,58 @@ Team 2844 @2017
 
 '''
 import wpilib
+import magicbot
+import logging
+
+from wpilib.joystick import Joystick
+from wpilib.buttons.joystickbutton import JoystickButton
+from networktables import NetworkTables
+from commands.lower_arm_command import LowerArmCommand
+from commands.raise_arm_command import RaiseArmCommand
+from wpilib.command.scheduler import Scheduler
+from robomap import PortsList
+from components.drivetrain import DriveTrain
+from components.shooter import Shooter
+from components.geararm import GearArm
+from components.loader import Loader
 
 
-class SteampedeRobot(wpilib.IterativeRobot):
+class SteampedeRobot(magicbot.MagicBot):
     '''robot code for steampede'''
+    tankDriveTrain = TankDriveTrain
+    shooter = Shooter
+    gearArm = GearArm
+    loader = Loader
+     
+    def createObjects(self):
+        '''initialize logging to capture debug messages from robot'''
+        logging.basicConfig(level=logging.DEBUG)
 
-    def robotInit(self):
-        '''Robot initilization function'''
-
+        '''initialize camera server to stream back to dashboard'''
         wpilib.CameraServer.launch()
 
-        '''object that handles basic drive operatives'''
-        self.drive_rf_motor = wpilib.Victor(6)
-        self.drive_rr_motor = wpilib.Victor(7)
-        self.drive_lf_motor = wpilib.Victor(8)
-        self.drive_lr_motor = wpilib.Victor(9)
-        self.shooter_motor = wpilib.Victor(0)
-        self.gear_arm_motor = wpilib.Spark(1)
-        self.loader_motor= wpilib.Spark(2)
+        self.left_joystick = wpilib.Joystick(0)
+        self.right_joystick = wpilib.Joystick(1)
+        
+        self.tankDriveTrain_lf_motor = wpilib.Victor(motors.left_front)
+        self.tankDriveTrain_rf_motor = wpilib.Victor(motors.right_front)        
+        self.tankDriveTrain_lr_motor = wpilib.Victor(motors.left_rear)
+        self.tankDriveTrain_rr_motor = wpilib.Victor(motors.right_rear)
+        self.tankDriveTrain_left_stick = self.left_joystick
+        self.tankDriveTrain_right_stick = self.right_joystick
 
-        self.myRobot = wpilib.RobotDrive(self.drive_lf_motor, self.drive_lr_motor, self.drive_rf_motor, self.drive_rr_motor)
-        self.myRobot.setExpiration(0.1)
-
-        '''joysticks 1 & 2 on the driver station'''
-        self.leftStick = wpilib.Joystick(0)
-        self.rightStick = wpilib.Joystick(1)
+        self.shooter_motor = wpilib.Victor(motors.shooter)
+        self.gearArm_motor = wpilib.Spark(motors.gear_arm)               
+        self.loader_motor = wpilib.Spark(motors.loader)
 
     def teleopInit(self):
         '''Executed at the start of teleop mode'''
-        self.myRobot.setSafetyEnabled(True)
-
+        pass
+            
     def teleopPeriodic(self):
         '''Runs the motor with tank steering'''
-        self.myRobot.tankDrive(self.leftStick, self.rightStick, True)
+        wpilib.scheduler.Run()
+
 
 if __name__ == '__main__':
     wpilib.run(SteampedeRobot)
