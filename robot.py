@@ -6,6 +6,7 @@ Team 2844 @2017
 '''
 import wpilib
 from networktables import NetworkTables
+from robotpy_ext.autonomous import AutonomousModeSelector
 
 
 class SteampedeRobot(wpilib.IterativeRobot):
@@ -49,6 +50,7 @@ class SteampedeRobot(wpilib.IterativeRobot):
         self.gear_arm_motor = wpilib.Spark(1)
         self.loader_motor = wpilib.Spark(2)
 
+        # initialize drive
         self.drive = wpilib.RobotDrive(self.drive_lf_motor, self.drive_lr_motor,
                                        self.drive_rf_motor, self.drive_rr_motor)
 
@@ -58,11 +60,21 @@ class SteampedeRobot(wpilib.IterativeRobot):
         self.left_stick = wpilib.Joystick(0)
         self.right_stick = wpilib.Joystick(1)
 
+        # initialize gyro
+        self.gyro = wpilib.AnalogGyro(1)
+
+        # initialize autonomous components
+        self.components = {
+            'drive': self.drive
+        }
+
+        self.automodes = AutonomousModeSelector('autonomous', self.components)
+
     def teleopInit(self):
         '''Executed at the start of teleop mode'''
         self.drive.setSafetyEnabled(True)
 
-    def teleopPeriodic(self):
+    def teleopPeriodic(self):        
         '''Runs the motor with tank steering'''
         self.drive.tankDrive(self.left_stick, self.right_stick, True)
 
@@ -79,6 +91,24 @@ class SteampedeRobot(wpilib.IterativeRobot):
         else:
             self.loader_enabled = False
             self.loader_motor.set(0)
+            
+    def autonomousInit(self):
+        self.drive.setSafetyEnabled(True)
+    
+    def autonomousPeriodic(self):
+        self.automodes.run()
+
+    def disabledInit(self):
+        pass
+    
+    def disabledPeriodic(self):
+        pass
+
+    def testInit(self):
+        pass
+
+    def testPeriodic(self):
+        pass
 
 
 if __name__ == '__main__':
