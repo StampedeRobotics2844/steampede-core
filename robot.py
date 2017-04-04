@@ -5,10 +5,11 @@ Team 2844 @2017
 
 '''
 import wpilib
-import time
+import logging
 from networktables import NetworkTables
 from robotpy_ext.autonomous import AutonomousModeSelector
 
+logging.basicConfig(level=logging.DEBUG)
 
 class SteampedeRobot(wpilib.IterativeRobot):
     ''' robot code for steampede '''
@@ -22,17 +23,22 @@ class SteampedeRobot(wpilib.IterativeRobot):
         self.gear_arm_duration = 1
         self.shooter_enabled = False
         self.loader_enabled = False
+        
         self.gear_arm_opened = False
         self.gear_arm_opening = False
         self.gear_arm_closing = False
+
         self.drive_rf_motor = None
         self.drive_rr_motor = None
         self.drive_lf_motor = None
         self.drive_lr_motor = None
+
         self.shooter_motor = None
         self.gear_arm_motor = None
         self.loader_motor = None
+
         self.left_stick = None
+
         self.right_stick = None
         self.drive = None
 
@@ -75,7 +81,7 @@ class SteampedeRobot(wpilib.IterativeRobot):
 
         self.automodes = AutonomousModeSelector('autonomous', self.components)
         
-        self.timer = wpilib.Timer()
+        self.gear_timer = wpilib.Timer()        
 
     def teleopInit(self):
         '''Executed at the start of teleop mode'''
@@ -98,21 +104,35 @@ class SteampedeRobot(wpilib.IterativeRobot):
         else:
             self.loader_enabled = False
             self.loader_motor.set(0)
-            
-        if self.right_stick.getRawButton(2) or self.left_stick.getRawButton(2):
-            if self.gear_arm_opened:
-                self.gear_arm_opened = False
+                    
+        if self.right_stick.getRawButton(2) or self.left_stick.getRawButton(2):            
+            if self.gear_arm_opened and self.gear_arm_closing == False:
+                self.gear_timer.reset()
+                self.gear_timer.start()
                 self.gear_arm_motor.set(self.gear_arm_speed)
-                self.timer.delay(self.gear_arm_duration)
-                self.get_arm_motor.set(0)
-                    
+                self.gear_arm_closing = True
         elif self.right_stick.getRawButton(3) or self.left_stick.getRawButton(3):
-            if not self.gear_arm_opened:
-                self.gear_arm_opened = True
+            if not self.gear_arm_opened and self.gear_arm_opening == False:
+                self.gear_timer.reset()
+                self.gear_timer.start()
                 self.gear_arm_motor.set(self.gear_arm_speed * -1)
-                self.timer.delay(self.gear_arm_duration)
+                self.gear_arm_opening = True
+
+        if self.gear_arm_closing:
+            if self.gear_timer.hasPeriodPassed(self.gear_arm_duration):
+                self.gear_arm_opened = False
+                self.gear_arm_closing = False
+                self.gear_arm_opening = False
                 self.gear_arm_motor.set(0)
-                    
+                self.gear_timer.stop()
+        elif self.gear_arm_opening:
+            if self.gear_timer.hasPeriodPassed(self.gear_arm_duration):                
+                self.gear_arm_opened = True
+                self.gear_arm_opening = False
+                self.gear_arm_closing = False
+                self.gear_arm_motor.set(0)
+                self.gear_timer.stop()
+
     def autonomousInit(self):
         self.drive.setSafetyEnabled(True)
     
