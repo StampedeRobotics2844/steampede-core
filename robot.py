@@ -5,6 +5,7 @@ Team 2844 @2017
 
 '''
 import wpilib
+import time
 from networktables import NetworkTables
 from robotpy_ext.autonomous import AutonomousModeSelector
 
@@ -17,9 +18,11 @@ class SteampedeRobot(wpilib.IterativeRobot):
 
         self.smart_dashboard = None
         self.shooter_speed = 1.0
+        self.gear_arm_speed = .5
+        self.gear_arm_duration = 1
         self.shooter_enabled = False
         self.loader_enabled = False
-        self.gear_arm_up = False
+        self.gear_arm_opened = False
         self.drive_rf_motor = None
         self.drive_rr_motor = None
         self.drive_lf_motor = None
@@ -69,6 +72,12 @@ class SteampedeRobot(wpilib.IterativeRobot):
         }
 
         self.automodes = AutonomousModeSelector('autonomous', self.components)
+        
+        self.gear_arm_opened = False
+
+        self.timer = wpilib.Timer()
+        self.gear_arm_power = 0.25
+
 
     def teleopInit(self):
         '''Executed at the start of teleop mode'''
@@ -92,6 +101,20 @@ class SteampedeRobot(wpilib.IterativeRobot):
             self.loader_enabled = False
             self.loader_motor.set(0)
             
+        if self.right_stick.getRawButton(2) or self.left_stick.getRawButton(2):
+            if self.gear_arm_opened:
+                self.gear_arm_opened = False
+                self.gear_arm_motor.set(self.gear_arm_speed)
+                self.timer.delay(self.gear_arm_duration)
+                self.get_arm_motor.set(0)
+                    
+        elif self.right_stick.getRawButton(3) or self.left_stick.getRawButton(3):
+            if not self.gear_arm_opened:
+                self.gear_arm_opened = True
+                self.gear_arm_motor.set(self.gear_arm_speed * -1)
+                self.timer.delay(self.gear_arm_duration)
+                self.gear_arm_motor.set(0)
+                    
     def autonomousInit(self):
         self.drive.setSafetyEnabled(True)
     
