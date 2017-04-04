@@ -18,11 +18,13 @@ class SteampedeRobot(wpilib.IterativeRobot):
 
         self.smart_dashboard = None
         self.shooter_speed = 1.0
-        self.gear_arm_speed = .5
+        self.gear_arm_speed = .25
         self.gear_arm_duration = 1
         self.shooter_enabled = False
         self.loader_enabled = False
         self.gear_arm_opened = False
+        self.gear_arm_opening = False
+        self.gear_arm_closing = False
         self.drive_rf_motor = None
         self.drive_rr_motor = None
         self.drive_lf_motor = None
@@ -73,11 +75,7 @@ class SteampedeRobot(wpilib.IterativeRobot):
 
         self.automodes = AutonomousModeSelector('autonomous', self.components)
         
-        self.gear_arm_opened = False
-
         self.timer = wpilib.Timer()
-        self.gear_arm_power = 0.25
-
 
     def teleopInit(self):
         '''Executed at the start of teleop mode'''
@@ -120,18 +118,6 @@ class SteampedeRobot(wpilib.IterativeRobot):
     
     def autonomousPeriodic(self):
         self.automodes.run()
-
-    def disabledInit(self):
-        pass
-    
-    def disabledPeriodic(self):
-        pass
-
-    def testInit(self):
-        pass
-
-    def testPeriodic(self):
-        pass
 
 
 if __name__ == '__main__':
