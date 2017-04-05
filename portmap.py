@@ -15,3 +15,6 @@ joysticks = PortMap()
 
 joysticks.left_joystick = 0
 joysticks.right_joystick = 1
+
+joysticks.button_gear_arm_down = 2
+joysticks.button_gear_arm_up = 3

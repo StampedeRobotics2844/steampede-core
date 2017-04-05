@@ -19,6 +19,8 @@ class SteampedeRobot(wpilib.IterativeRobot):
         super().__init__()
 
         self.smart_dashboard = None
+        self.motor_speed_stop = 0
+
         self.shooter_speed = 1.0
 
         self.gear_arm_opening_speed = -1.0
@@ -105,7 +107,7 @@ class SteampedeRobot(wpilib.IterativeRobot):
                 self.shooter_motor.set(self.shooter_speed)
             else:
                 self.shooter_enabled = False
-                self.shooter_motor.set(0)
+                self.shooter_motor.set(self.motor_speed_stop)
         except:
             if not self.isFmsAttached():
                 raise
@@ -119,27 +121,27 @@ class SteampedeRobot(wpilib.IterativeRobot):
                 self.loader_motor.set(self.loader_speed)
             else:
                 self.loader_enabled = False
-                self.loader_motor.set(0)
+                self.loader_motor.set(self.motor_speed_stop)
         except:
             if not self.isFmsAttached():
                 raise
-                
+
         try:
-            if self.right_stick.getRawButton(2) or self.left_stick.getRawButton(2):    
+            if self.right_stick.getRawButton(portmap.joysticks.button_gear_arm_down) or self.left_stick.getRawButton(portmap.joysticks.button_gear_arm_down):    
                 self.gear_arm_closing = True        
                 self.gear_arm_motor.set(self.gear_arm_closing_speed)
             else:
-                self.gear_arm_motor.set(0)
+                self.gear_arm_motor.set(self.motor_speed_stop)
                 self.gear_arm_closing = False
         except:
             if not self.isFmsAttached():
                 raise
         try:
-            if self.right_stick.getRawButton(3) or self.left_stick.getRawButton(3):
+            if self.right_stick.getRawButton(portmap.joysticks.button_gear_arm_up) or self.left_stick.getRawButton(portmap.joysticks.button_gear_arm_up):
                 self.gear_arm_opening = True
                 self.gear_arm_motor.set(self.gear_arm_opening_speed)
             else:
-                self.gear_arm_motor.set(0)
+                self.gear_arm_motor.set(self.motor_speed_stop)
                 self.gear_arm_opening = False
         except:
             if not self.isFmsAttached():
@@ -156,6 +158,9 @@ class SteampedeRobot(wpilib.IterativeRobot):
     
     def autonomousPeriodic(self):
         self.automodes.run()
+
+    def isFmsAttached(self):
+        return False
 
 
 if __name__ == '__main__':
