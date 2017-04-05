@@ -94,45 +94,62 @@ class SteampedeRobot(wpilib.IterativeRobot):
         '''Executed at the start of teleop mode'''
         self.drive.setSafetyEnabled(True)
 
-    def teleopPeriodic(self):        
-        '''Runs the motor with tank steering'''
-        self.drive.tankDrive(self.left_stick, self.right_stick, True)
+    def teleopPeriodic(self):  
+        try:      
+            if self.left_stick.getTrigger():
+                self.shooter_enabled = True
+                axis = self.left_stick.getAxis(wpilib.Joystick.AxisType.kZ)
+                if axis != self.shooter_speed:
+                    self.shooter_speed = axis
+                    self.smart_dashboard.putNumber('shooter_speed', self.shooter_speed)
+                self.shooter_motor.set(self.shooter_speed)
+            else:
+                self.shooter_enabled = False
+                self.shooter_motor.set(0)
+        except:
+            if not self.isFmsAttached():
+                raise
+        try:
+            if self.right_stick.getTrigger():
+                self.loader_enabled = True
+                axis = self.right_stick.getAxis(wpilib.Joystick.AxisType.kZ)
+                if axis != self.loader_speed:
+                    self.loader_speed = axis
+                    self.smart_dashboard.putNumber('loader_speed', self.loader_speed)
+                self.loader_motor.set(self.loader_speed)
+            else:
+                self.loader_enabled = False
+                self.loader_motor.set(0)
+        except:
+            if not self.isFmsAttached():
+                raise
+                
+        try:
+            if self.right_stick.getRawButton(2) or self.left_stick.getRawButton(2):    
+                self.gear_arm_closing = True        
+                self.gear_arm_motor.set(self.gear_arm_closing_speed)
+            else:
+                self.gear_arm_motor.set(0)
+                self.gear_arm_closing = False
+        except:
+            if not self.isFmsAttached():
+                raise
+        try:
+            if self.right_stick.getRawButton(3) or self.left_stick.getRawButton(3):
+                self.gear_arm_opening = True
+                self.gear_arm_motor.set(self.gear_arm_opening_speed)
+            else:
+                self.gear_arm_motor.set(0)
+                self.gear_arm_opening = False
+        except:
+            if not self.isFmsAttached():
+                raise
 
-        if self.left_stick.getTrigger():
-            self.shooter_enabled = True
-            axis = self.left_stick.getAxis(wpilib.Joystick.AxisType.kZ)
-            if axis != self.shooter_speed:
-                self.shooter_speed = axis
-                self.smart_dashboard.putNumber('shooter_speed', self.shooter_speed)
-            self.shooter_motor.set(self.shooter_speed)
-        else:
-            self.shooter_enabled = False
-            self.shooter_motor.set(0)
-
-        if self.right_stick.getTrigger():
-            self.loader_enabled = True
-            axis = self.right_stick.getAxis(wpilib.Joystick.AxisType.kZ)
-            if axis != self.loader_speed:
-                self.loader_speed = axis
-                self.smart_dashboard.putNumber('loader_speed', self.loader_speed)
-            self.loader_motor.set(self.loader_speed)
-        else:
-            self.loader_enabled = False
-            self.loader_motor.set(0)
-                    
-        if self.right_stick.getRawButton(2) or self.left_stick.getRawButton(2):    
-            self.gear_arm_closing = True        
-            self.gear_arm_motor.set(self.gear_arm_closing_speed)
-        else:
-            self.gear_arm_motor.set(0)
-            self.gear_arm_closing = False
-        
-        if self.right_stick.getRawButton(3) or self.left_stick.getRawButton(3):
-            self.gear_arm_opening = True
-            self.gear_arm_motor.set(self.gear_arm_opening_speed)
-        else:
-            self.gear_arm_motor.set(0)
-            self.gear_arm_opening = False
+        try:
+            self.drive.tankDrive(self.left_stick, self.right_stick, True)
+        except:
+            if not self.isFmsAttached():
+                raise
 
     def autonomousInit(self):
         self.drive.setSafetyEnabled(True)
