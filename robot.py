@@ -6,7 +6,7 @@ Team 2844 @2017
 '''
 import wpilib
 import logging
-import robotmap
+import portmap
 from networktables import NetworkTables
 from robotpy_ext.autonomous import AutonomousModeSelector
 
@@ -62,13 +62,13 @@ class SteampedeRobot(wpilib.IterativeRobot):
         wpilib.CameraServer.launch()
 
         # object that handles basic drive operatives
-        self.drive_rf_motor = wpilib.Victor(robotmap.motors.right_front)
-        self.drive_rr_motor = wpilib.Victor(robotmap.motors.right_rear)
-        self.drive_lf_motor = wpilib.Victor(robotmap.motors.left_front)
-        self.drive_lr_motor = wpilib.Victor(robotmap.motors.left_rear)
-        self.shooter_motor = wpilib.Victor(robotmap.motors.shooter)
-        self.gear_arm_motor = wpilib.Spark(robotmap.motors.gear_arm)
-        self.loader_motor = wpilib.Spark(robotmap.motors.loader)
+        self.drive_rf_motor = wpilib.Victor(portmap.motors.right_front)
+        self.drive_rr_motor = wpilib.Victor(portmap.motors.right_rear)
+        self.drive_lf_motor = wpilib.Victor(portmap.motors.left_front)
+        self.drive_lr_motor = wpilib.Victor(portmap.motors.left_rear)
+        self.shooter_motor = wpilib.Victor(portmap.motors.shooter)
+        self.gear_arm_motor = wpilib.Spark(portmap.motors.gear_arm)
+        self.loader_motor = wpilib.Spark(portmap.motors.loader)
 
         # initialize drive
         self.drive = wpilib.RobotDrive(self.drive_lf_motor, self.drive_lr_motor,
@@ -77,8 +77,8 @@ class SteampedeRobot(wpilib.IterativeRobot):
         self.drive.setExpiration(0.1)
 
         # joysticks 1 & 2 on the driver station
-        self.left_stick = wpilib.Joystick(0)
-        self.right_stick = wpilib.Joystick(1)
+        self.left_stick = wpilib.Joystick(portmap.joysticks.left_joystick)
+        self.right_stick = wpilib.Joystick(portmap.joysticks.right_joystick)
 
         # initialize gyro
         self.gyro = wpilib.AnalogGyro(1)

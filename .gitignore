@@ -90,3 +90,6 @@ ENV/
 
 # Editor
 .vscode/
+
+# RoboRio Deploy
+.deploy_cfg
