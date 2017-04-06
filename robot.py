@@ -7,6 +7,7 @@ Team 2844 @2017
 import wpilib
 import logging
 import portmap
+
 from networktables import NetworkTables
 from robotpy_ext.autonomous import AutonomousModeSelector
 
@@ -109,7 +110,7 @@ class SteampedeRobot(wpilib.IterativeRobot):
                 self.shooter_enabled = False
                 self.shooter_motor.set(self.motor_speed_stop)
         except:
-            if not self.isFmsAttached():
+            if not self.isFMSAttached():
                 raise
         try:
             if self.right_stick.getTrigger():
@@ -123,7 +124,7 @@ class SteampedeRobot(wpilib.IterativeRobot):
                 self.loader_enabled = False
                 self.loader_motor.set(self.motor_speed_stop)
         except:
-            if not self.isFmsAttached():
+            if not self.isFMSAttached():
                 raise
 
         try:
@@ -134,7 +135,7 @@ class SteampedeRobot(wpilib.IterativeRobot):
                 self.gear_arm_motor.set(self.motor_speed_stop)
                 self.gear_arm_closing = False
         except:
-            if not self.isFmsAttached():
+            if not self.isFMSAttached():
                 raise
         try:
             if self.right_stick.getRawButton(portmap.joysticks.button_gear_arm_up) or self.left_stick.getRawButton(portmap.joysticks.button_gear_arm_up):
@@ -144,13 +145,13 @@ class SteampedeRobot(wpilib.IterativeRobot):
                 self.gear_arm_motor.set(self.motor_speed_stop)
                 self.gear_arm_opening = False
         except:
-            if not self.isFmsAttached():
+            if not self.isFMSAttached():
                 raise
 
         try:
             self.drive.tankDrive(self.left_stick, self.right_stick, True)
         except:
-            if not self.isFmsAttached():
+            if not self.isFMSAttached():
                 raise
 
     def autonomousInit(self):
@@ -159,8 +160,8 @@ class SteampedeRobot(wpilib.IterativeRobot):
     def autonomousPeriodic(self):
         self.automodes.run()
 
-    def isFmsAttached(self):
-        return False
+    def isFMSAttached(self):
+        return wpilib.DriverStation.getInstance().isFMSAttached()
 
 
 if __name__ == '__main__':
