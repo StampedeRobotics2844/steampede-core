@@ -88,7 +88,8 @@ class SteampedeRobot(wpilib.IterativeRobot):
 
         # initialize autonomous components
         self.components = {
-            'drive': self.drive
+            'drive': self.drive,
+            'gear_arm_motor': self.gear_arm_motor
         }
 
         self.automodes = AutonomousModeSelector('autonomous', self.components)
