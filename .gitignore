@@ -87,3 +87,9 @@ ENV/
 
 # Rope project settings
 .ropeproject
+
+# Editor
+.vscode/
+
+# RoboRio Deploy
+.deploy_cfg
